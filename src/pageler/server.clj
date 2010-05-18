@@ -1,7 +1,7 @@
 (ns pageler.server
   (:use 
    compojure
-   (pageler markdown couchdb bottles)))
+   (pageler markdown couchdb)))
 
 (defn generate-page [page]
   (html
@@ -31,17 +31,10 @@
   (let [id (create-page {:title title :contents contents})]
     (redirect-to (format "/%s" id))))
       
-
 (defroutes pageler-app
   (GET "/" new-page)
   (GET "/new-page" new-page)
   (POST "/submit-page" (submit-page (params :title) (params :contents)))
-  (GET "/:bottles/bottles"
-       (html 
-	(interleave 
-	 (sing 
-          (min 1000 (Integer/parseInt (:bottles params))))
-	 (repeat [:br]))))
   (GET "/:id"
        (generate-page
 	(get-page (:id params))))
